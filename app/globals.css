@@ -13,12 +13,17 @@
   --font-caveat: var(--font-caveat);
 }
 
+html,
+body {
+  min-height: 100dvh;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
 }
 
-/* ── Transitions ── */
+/* ── Screen transitions ── */
 .screen-fade-enter {
   opacity: 0;
 }
@@ -34,19 +39,27 @@ body {
   transition: opacity 700ms ease;
 }
 
-/* ── Water fill ── */
-@keyframes water-fill {
-  from {
-    transform: scaleY(0);
+/* ── Intro ripple rings ── */
+@keyframes intro-ripple {
+  0% {
+    transform: scale(0.55);
+    opacity: 0;
   }
-  to {
-    transform: scaleY(1);
+  12% {
+    opacity: 0.22;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
   }
 }
 
-.water-fill {
-  transform-origin: bottom;
-  animation: water-fill 2s ease-out forwards;
+.intro-ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  animation: intro-ripple 5s ease-out infinite;
+  pointer-events: none;
 }
 
 /* ── Drip ── */
@@ -55,34 +68,18 @@ body {
     transform: translateY(0) scaleY(1);
     opacity: 1;
   }
-  80% {
-    transform: translateY(40px) scaleY(1.4);
-    opacity: 1;
+  75% {
+    transform: translateY(36px) scaleY(1.5);
+    opacity: 0.9;
   }
   100% {
-    transform: translateY(48px) scaleY(0.6);
+    transform: translateY(46px) scaleY(0.5);
     opacity: 0;
   }
 }
 
 .drip {
-  animation: drip 0.6s ease-in forwards;
-}
-
-/* ── Ripple (cup surface) ── */
-@keyframes ripple {
-  0% {
-    transform: scale(0.4);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
-}
-
-.ripple {
-  animation: ripple 0.8s ease-out forwards;
+  animation: drip 0.55s ease-in forwards;
 }
 
 /* ── Float (objects inside bottle) ── */
@@ -103,12 +100,14 @@ body {
 @keyframes tap-pulse {
   0%, 100% {
     transform: scale(1);
+    filter: brightness(1);
   }
   50% {
-    transform: scale(1.08);
+    transform: scale(1.07);
+    filter: brightness(1.1);
   }
 }
 
 .tap-pulse {
-  animation: tap-pulse 1.5s ease-in-out infinite;
+  animation: tap-pulse 1.6s ease-in-out infinite;
 }

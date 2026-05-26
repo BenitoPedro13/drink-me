@@ -12,13 +12,11 @@ interface SelectionScreenProps {
 export default function SelectionScreen({ people, onSelect }: SelectionScreenProps) {
   const [centeredIndex, setCenteredIndex] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const itemWidth = 140  // px per bottle slot
+  const itemWidth = 140
 
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
-
-    // Scroll to center the first item on mount
     el.scrollLeft = 0
 
     const handleScroll = () => {
@@ -34,21 +32,23 @@ export default function SelectionScreen({ people, onSelect }: SelectionScreenPro
     scrollRef.current?.scrollTo({ left: idx * itemWidth, behavior: "smooth" })
   }
 
+  const selected = people[centeredIndex]
+
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full bg-white select-none">
+    <div className="flex flex-col items-center justify-center w-full flex-1 min-h-dvh bg-white select-none">
       {/* Top label */}
       <p
-        className="text-gray-400 mb-8 tracking-widest uppercase text-sm"
-        style={{ fontFamily: "var(--font-caveat)", fontSize: "1rem" }}
+        className="text-gray-300 mb-8 tracking-widest uppercase"
+        style={{ fontFamily: "var(--font-caveat)", fontSize: "0.85rem", letterSpacing: "0.2em" }}
       >
         Would you drink me?
       </p>
 
-      {/* "CHOOSE ME" float label */}
-      <div className="relative mb-2 h-8 flex items-center justify-center">
+      {/* "Choose me" */}
+      <div className="relative mb-3 h-8 flex items-center justify-center">
         <span
-          className="text-gray-700 font-semibold tracking-wide"
-          style={{ fontFamily: "var(--font-caveat)", fontSize: "1.25rem" }}
+          className="text-gray-500 tracking-wide"
+          style={{ fontFamily: "var(--font-caveat)", fontSize: "1.2rem" }}
         >
           Choose me
         </span>
@@ -56,9 +56,8 @@ export default function SelectionScreen({ people, onSelect }: SelectionScreenPro
 
       {/* Carousel */}
       <div className="relative w-full overflow-hidden">
-        {/* Gradient fades on sides */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-white to-transparent" />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-l from-white to-transparent" />
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-white to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-white to-transparent" />
 
         <div
           ref={scrollRef}
@@ -78,29 +77,47 @@ export default function SelectionScreen({ people, onSelect }: SelectionScreenPro
                 style={{
                   width: itemWidth,
                   scrollSnapAlign: "center",
-                  transform: isCentered ? "scale(1.1)" : "scale(0.9)",
-                  opacity: isCentered ? 1 : 0.55,
+                  transform: isCentered ? "scale(1.1)" : "scale(0.88)",
+                  opacity: isCentered ? 1 : 0.45,
                   transition: "transform 300ms ease, opacity 300ms ease",
                 }}
                 onClick={() => scrollTo(idx)}
               >
-                <Bottle person={person} variant="small" />
+                {/* Pre-filled bottle (75% water level) */}
+                <Bottle person={person} variant="small" waterLevel={75} />
+
+                {/* Name + flag */}
                 <p
                   className="mt-2 text-center text-gray-700"
                   style={{ fontFamily: "var(--font-caveat)", fontSize: "1.1rem" }}
                 >
                   {person.flagEmoji} {person.name}
                 </p>
+
+                {/* Accent dot for selected */}
+                <div
+                  className="mt-1.5 rounded-full transition-all duration-300"
+                  style={{
+                    width: isCentered ? "6px" : "4px",
+                    height: isCentered ? "6px" : "4px",
+                    background: isCentered ? person.bottleAccent : "transparent",
+                  }}
+                />
               </div>
             )
           })}
         </div>
       </div>
 
-      {/* SELECT button */}
+      {/* SELECT button — uses person's accent color */}
       <button
-        className="mt-8 px-10 py-3 rounded-full border-2 border-gray-800 text-gray-800 font-semibold tracking-widest uppercase hover:bg-gray-800 hover:text-white transition-colors"
-        style={{ fontFamily: "var(--font-caveat)", fontSize: "1.2rem" }}
+        className="mt-8 px-10 py-3 rounded-full text-white font-semibold tracking-widest uppercase transition-all hover:opacity-90 active:scale-95"
+        style={{
+          fontFamily: "var(--font-caveat)",
+          fontSize: "1.2rem",
+          background: selected.bottleAccent,
+          boxShadow: `0 4px 18px ${selected.bottleAccent}44`,
+        }}
         onClick={() => onSelect(people[centeredIndex])}
       >
         Select
