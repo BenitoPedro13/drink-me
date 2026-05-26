@@ -10,17 +10,105 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-caveat: var(--font-caveat);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ── Transitions ── */
+.screen-fade-enter {
+  opacity: 0;
+}
+.screen-fade-enter-active {
+  opacity: 1;
+  transition: opacity 700ms ease;
+}
+.screen-fade-exit {
+  opacity: 1;
+}
+.screen-fade-exit-active {
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+/* ── Water fill ── */
+@keyframes water-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.water-fill {
+  transform-origin: bottom;
+  animation: water-fill 2s ease-out forwards;
+}
+
+/* ── Drip ── */
+@keyframes drip {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(40px) scaleY(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(48px) scaleY(0.6);
+    opacity: 0;
+  }
+}
+
+.drip {
+  animation: drip 0.6s ease-in forwards;
+}
+
+/* ── Ripple (cup surface) ── */
+@keyframes ripple {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  animation: ripple 0.8s ease-out forwards;
+}
+
+/* ── Float (objects inside bottle) ── */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--rotate, 0deg));
+  }
+  50% {
+    transform: translateY(-6px) rotate(var(--rotate, 0deg));
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ── Pulse (tap/faucet) ── */
+@keyframes tap-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.tap-pulse {
+  animation: tap-pulse 1.5s ease-in-out infinite;
 }
